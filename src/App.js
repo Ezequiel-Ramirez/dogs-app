@@ -1,34 +1,46 @@
 
 import React, { useState, useEffect } from 'react';
 import Cards from './components/Cards';
+import Error from './components/Error';
 import Select from './components/Select';
 import getDog from './helpers/getDog';
 
 const initialDog ={
   image: "",
   breed: {
-    id:"",
+    id:"0",
     name: ""
   }
 }
 
 function App() {
   const [dog, setDog] = useState(initialDog);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     updateDog();
   }, [])
 
-  const updateDog = () => {
-    getDog()
+  const updateDog = (breedId) => {
+    setLoading(true)
+    getDog(breedId)
       .then((newDog) => {
         setDog(newDog);
+        setLoading(false);
+      })
+      .catch((error)=>{
+        console.log(error)
+        setError("Error al cargar un perro");
+        setLoading(false);
       })
   }
   return (
     <div className="app">
-      <Select />
-      <Cards dog={dog} />
+      <Select updateDog={updateDog}/>
+      {error && <Error error={error}/>}
+      
+      <Cards dog={dog} updateDog={updateDog} loading={loading} />
     </div>
   );
 }

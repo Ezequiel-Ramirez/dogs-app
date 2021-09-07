@@ -1,10 +1,14 @@
 import React from 'react'
+import Spiner from './Spiner';
 
-const Cards = ({ dog }) => {
+
+const Cards = ({ dog, updateDog, loading }) => {
+    if (loading) return  <Spiner/>
+    
     return (
-        <div className="card">
+        <div className="card bounce" onClick={()=> updateDog(dog.breed.id)}>
             <img src={dog.image} alt={dog.breed.name} />
-            <p>Breed</p>
+            <p>{dog.breed.name}</p>
         </div>
     )
 }
